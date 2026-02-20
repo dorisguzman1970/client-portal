@@ -1,0 +1,7 @@
+{
+  "routes": [
+    { "route": "/login", "allowedRoles": ["anonymous"] },
+    { "route": "/*", "allowedRoles": ["authenticated"] }
+  ],
+  "navigationFallback": { "rewrite": "/index.html" }
+}
