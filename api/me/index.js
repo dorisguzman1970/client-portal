@@ -6,7 +6,7 @@ module.exports = async function (context, req) {
     return;
   }
 
-  // Validación simple (puedes endurecerla luego)
+  // validación simple
   const pattern = /^[\w.-]+@[\w.-]+\.\w+$/;
   if (!pattern.test(email)) {
     context.res = { status: 400, body: { status: "error", message: "Formato de email inválido" } };
