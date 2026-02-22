@@ -25,25 +25,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
-      - name: Debug structure (optional)
-        run: |
-          echo "SHA: $GITHUB_SHA"
-          ls -la
-          ls -la src || true
-          ls -la src/pages || true
-          ls -la src/api || true
-          ls -la api || true
-          echo "--- Login.tsx ---"
-          sed -n '1,5p' src/pages/Login.tsx || true
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
+      # (Opcional) Solo para ver en logs que api/ existe
       - name: Verify API files in runner
         run: |
           echo "=== API folder ==="
@@ -52,29 +35,18 @@ jobs:
           ls -la api/me || true
           echo "=== function.json ==="
           cat api/me/function.json || true
-          echo "=== host.json ==="
-          cat api/host.json || true
 
-      - name: Deploy to Azure Static Web Apps
-        id: builddeploy
+      - name: Build And Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
 
-          # FRONTEND (repo root)
           app_location: "/"
-          output_location: "dist"
-
-          # AZURE FUNCTIONS (repo root)
           api_location: "api"
           api_language: "node"
-
-          # We already built the frontend; do not let Oryx rebuild it
-          skip_app_build: true
-          # Let SWA build/deploy the Functions properly
-          skip_api_build: false
+          output_location: "dist"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -83,16 +55,10 @@ jobs:
 
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           action: "close"
-
-
-
-
-
 
 
 
