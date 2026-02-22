@@ -1,11 +1,34 @@
-import { useState } from "react";
-import Login from "./pages/Login";
+import { useEffect, useState } from "react";
 import Portal from "./pages/Portal";
+import { getAuthUser, login, logout, type AuthUser } from "./auth/auth";
 
 export default function App() {
-  const [email, setEmail] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!email) return <Login onSuccess={(e) => setEmail(e)} />;
+  useEffect(() => {
+    getAuthUser()
+      .then(setUser)
+      .finally(() => setLoading(false));
+  }, []);
 
-  return <Portal email={email} onLogout={() => setEmail(null)} />;
+  if (loading) return <div style={{ padding: 20 }}>Cargando...</div>;
+
+  // Si no hay usuario, muestra botón para ir a Entra ID
+  if (!user) {
+    return (
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
+        <div style={{ width: 360 }}>
+          <h2>Client Portal</h2>
+          <p>Inicia sesión con tu cuenta corporativa.</p>
+          <button style={{ width: "100%", padding: 10 }} onClick={login}>
+            Iniciar sesión (Entra ID)
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // user.userDetails suele ser el email/UPN
+  return <Portal email={user.userDetails ?? "usuario"} onLogout={logout} />;
 }
