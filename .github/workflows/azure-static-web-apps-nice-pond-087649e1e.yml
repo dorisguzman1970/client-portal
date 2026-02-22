@@ -21,48 +21,44 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Debug repo structure
+        run: |
+          pwd
+          ls -la
+          echo "Looking for portal folder..."
+          ls -la portal || true
+          echo "Listing portal contents..."
+          ls -la portal/src || true
+          ls -la portal/api || true
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-
-      # Debug: deja evidencia clara en logs de lo que ve Linux
-      - name: Debug paths
-        run: |
-          echo "SHA: $GITHUB_SHA"
-          pwd
-          ls -la
-          ls -la src || true
-          ls -la src/api || true
-          ls -la src/API || true
-          find src -maxdepth 2 -type f -name "client.ts" -print || true
-          echo "Login.tsx first lines:"
-          sed -n '1,10p' src/pages/Login.tsx || true
+          cache-dependency-path: portal/package-lock.json
 
       - name: Install dependencies
+        working-directory: portal
         run: npm ci
 
       - name: Build
+        working-directory: portal
         run: npm run build
 
       - name: Deploy to Azure Static Web Apps
-        id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
 
-          # App paths (relative to repo root)
-          app_location: "/"
+          app_location: "portal"
           output_location: "dist"
 
-          # Azure Functions API (relative to repo root)
-          api_location: "api"
+          api_location: "portal/api"
           api_language: "node"
 
-          # We already built above; avoid Oryx rebuilding
           skip_app_build: true
           skip_api_build: true
 
@@ -73,7 +69,6 @@ jobs:
 
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
