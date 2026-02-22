@@ -43,6 +43,16 @@ jobs:
 
       - name: Build
         run: npm run build
+        - name: Verify API files in runner
+        run: |
+        echo "=== API folder ==="
+        ls -la api || true
+        echo "=== api/me ==="
+        ls -la api/me || true
+        echo "=== function.json ==="
+        cat api/me/function.json || true
+        echo "=== host.json ==="
+        cat api/host.json || true
 
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
@@ -80,6 +90,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           action: "close"
+
 
 
 
