@@ -27,17 +27,16 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Debug paths
+      - name: Debug structure (optional)
         run: |
           echo "SHA: $GITHUB_SHA"
-          pwd
           ls -la
           ls -la src || true
+          ls -la src/pages || true
           ls -la src/api || true
-          ls -la src/API || true
           ls -la api || true
-          find src -maxdepth 2 -type f -name "client.ts" -print || true
-          sed -n '1,10p' src/pages/Login.tsx || true
+          echo "--- Login.tsx ---"
+          sed -n '1,5p' src/pages/Login.tsx || true
 
       - name: Install dependencies
         run: npm ci
@@ -51,14 +50,17 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: upload
+          action: "upload"
 
+          # FRONTEND (repo root)
           app_location: "/"
           output_location: "dist"
 
+          # AZURE FUNCTIONS (repo root)
           api_location: "api"
           api_language: "node"
 
+          # We already built; do not let Oryx rebuild
           skip_app_build: true
           skip_api_build: true
 
@@ -73,7 +75,8 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
-          action: close
+          action: "close"
+
 
 
 
