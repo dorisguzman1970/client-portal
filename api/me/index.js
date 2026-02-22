@@ -1,15 +1,16 @@
 module.exports = async function (context, req) {
-  const email = (req.body && req.body.email) || (req.query && req.query.email);
+  const email = (req.body?.email || "").toLowerCase();
 
   if (!email) {
-    context.res = { status: 400, body: { status: "error", message: "Debe proporcionar un email" } };
+    context.res = { status: 400, body: { message: "Email requerido" } };
     return;
   }
 
-  // validación simple
-  const pattern = /^[\w.-]+@[\w.-]+\.\w+$/;
-  if (!pattern.test(email)) {
-    context.res = { status: 400, body: { status: "error", message: "Formato de email inválido" } };
+  // Ejemplo: lista blanca
+  const allowed = ["tu@empresa.com"];
+
+  if (!allowed.includes(email)) {
+    context.res = { status: 401, body: { message: "No autorizado" } };
     return;
   }
 
