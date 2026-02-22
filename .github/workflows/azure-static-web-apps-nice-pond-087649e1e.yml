@@ -43,16 +43,17 @@ jobs:
 
       - name: Build
         run: npm run build
-        - name: Verify API files in runner
+
+      - name: Verify API files in runner
         run: |
-        echo "=== API folder ==="
-        ls -la api || true
-        echo "=== api/me ==="
-        ls -la api/me || true
-        echo "=== function.json ==="
-        cat api/me/function.json || true
-        echo "=== host.json ==="
-        cat api/host.json || true
+          echo "=== API folder ==="
+          ls -la api || true
+          echo "=== api/me ==="
+          ls -la api/me || true
+          echo "=== function.json ==="
+          cat api/me/function.json || true
+          echo "=== host.json ==="
+          cat api/host.json || true
 
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
@@ -70,13 +71,10 @@ jobs:
           api_location: "api"
           api_language: "node"
 
-          
           # We already built the frontend; do not let Oryx rebuild it
           skip_app_build: true
           # Let SWA build/deploy the Functions properly
           skip_api_build: false
-          
-          
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -90,7 +88,6 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           action: "close"
-
 
 
 
