@@ -1,7 +1,1 @@
-{
-  "routes": [
-    { "route": "/.auth/*", "allowedRoles": ["anonymous"] },
-    { "route": "/*", "allowedRoles": ["authenticated"] }
-  ],
-  "navigationFallback": { "rewrite": "/index.html" }
-}
+{"routes":[{"route":"/.auth/*","allowedRoles":["anonymous"]},{"route":"/*","allowedRoles":["authenticated"]}],"navigationFallback":{"rewrite":"/index.html"},"auth":{"rolesSource":"C:\\client-portal\\portal\\api\\me","identityProviders":{"azureActiveDirectory":{"registration":{"openIdIssuer":"https://login.microsoftonline.com/4179a48b-7710-4a7d-9437-23454f5ee239","clientIdSettingName":"AZURE_CLIENT_ID","clientSecretSettingName":"AZURE_CLIENT_SECRET_APP_SETTING_NAME"}}}}}
