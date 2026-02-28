@@ -2,5 +2,11 @@
   "name": "api",
   "private": true,
   "main": "index.js",
-  "engines": { "node": "18.x" }
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.9.1",
+    "uuid": "^9.0.0"
+  }
 }

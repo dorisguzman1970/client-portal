@@ -1,23 +1,53 @@
-import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Buildings from "./Buildings";
-import Documents from "./Documents";
+import { useState } from 'react';
+import Sidebar from '../components/Sidebar';
+import Welcome from './Welcome';
+import Users from './Users';
+import Clients from './Clients';
+import Buildings from './Buildings';
+import Documents from './Documents';
+import ParametersPage from './Parameters';
+import type { AuthInfo } from '../types';
 
-export default function Portal({
-  email,
-  onLogout,
-}: {
-  email: string;
+type Page = 'welcome' | 'users' | 'clients' | 'buildings' | 'documents' | 'parameters';
+
+interface PortalProps {
+  authInfo: AuthInfo;
   onLogout: () => void;
-}) {
-  const [active, setActive] = useState<"buildings" | "documents">("buildings");
+}
+
+export default function Portal({ authInfo, onLogout }: PortalProps) {
+  const [active, setActive] = useState<Page>('welcome');
+  // State for non-admin user creation flow: auto-open client form
+  const [pendingClientUserId, setPendingClientUserId] = useState<number | null>(null);
+
+  function handleUserCreatedNonAdmin(userId: number) {
+    setPendingClientUserId(userId);
+    setActive('clients');
+  }
+
+  function handlePrefilledHandled() {
+    setPendingClientUserId(null);
+  }
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "250px 1fr" }}>
-      <Sidebar email={email} active={active} onSelect={setActive} onLogout={onLogout} />
-      <div style={{ padding: 20 }}>
-        {active === "buildings" ? <Buildings /> : <Documents />}
-      </div>
+    <div className="portal-layout">
+      <Sidebar authInfo={authInfo} active={active} onSelect={setActive} onLogout={onLogout} />
+      <main className="portal-content">
+        {active === 'welcome' && <Welcome authInfo={authInfo} />}
+        {active === 'users' && (
+          <Users authInfo={authInfo} onUserCreatedNonAdmin={handleUserCreatedNonAdmin} />
+        )}
+        {active === 'clients' && (
+          <Clients
+            authInfo={authInfo}
+            prefilledUserId={pendingClientUserId}
+            onPrefilledHandled={handlePrefilledHandled}
+          />
+        )}
+        {active === 'buildings' && <Buildings authInfo={authInfo} />}
+        {active === 'documents' && <Documents authInfo={authInfo} />}
+        {active === 'parameters' && <ParametersPage authInfo={authInfo} />}
+      </main>
     </div>
   );
 }
