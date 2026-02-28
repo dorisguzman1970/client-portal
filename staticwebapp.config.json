@@ -1,6 +1,10 @@
 {
   "routes": [
     {
+      "route": "/.auth/*",
+      "allowedRoles": ["anonymous"]
+    },
+    {
       "route": "/login",
       "rewrite": "/.auth/login/aad"
     },
@@ -11,15 +15,11 @@
     {
       "route": "/api/*",
       "allowedRoles": ["authenticated"]
-    },
-    {
-      "route": "/app/*",
-      "allowedRoles": ["authenticated"]
     }
   ],
   "responseOverrides": {
     "401": {
-      "redirect": "/login"
+      "redirect": "/.auth/login/aad"
     }
   },
   "navigationFallback": {

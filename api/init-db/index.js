@@ -50,6 +50,14 @@ module.exports = async function (context, req) {
 
     context.res = { status: 200, body: { message: 'Database initialized.', details: results } };
   } catch (err) {
-    context.res = { status: 500, body: { message: err.message } };
+    context.res = {
+      status: 500,
+      body: {
+        message: err.message,
+        code: err.code,
+        statusCode: err.statusCode,
+        connectionString: process.env.COSMOS_CONNECTION_STRING ? 'SET (length: ' + process.env.COSMOS_CONNECTION_STRING.length + ')' : 'NOT SET',
+      },
+    };
   }
 };
