@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Portal from './pages/Portal';
+import EmailVerification from './components/EmailVerification';
 import { getAuthUser, login, logout, type AuthUser } from './auth/auth';
 import type { AuthInfo } from './types';
 
@@ -8,6 +9,22 @@ export default function App() {
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const [unauthorized, setUnauthorized] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [requiresVerification, setRequiresVerification] = useState(false);
+
+  async function fetchAuthInfo() {
+    const res = await fetch('/api/check-access');
+    const data = await res.json();
+    if (data.authorized) {
+      setAuthInfo({
+        userId: data.userId,
+        userName: data.userName,
+        userEmail: data.userEmail,
+        userAdmin: data.userAdmin === true,
+      });
+    } else {
+      setUnauthorized(true);
+    }
+  }
 
   useEffect(() => {
     async function init() {
@@ -20,12 +37,18 @@ export default function App() {
         const data = await res.json();
 
         if (data.authorized) {
-          setAuthInfo({
-            userId: data.userId,
-            userName: data.userName,
-            userEmail: data.userEmail,
-            userAdmin: data.userAdmin === true,
-          });
+          const email = (u.userDetails || '').toLowerCase();
+          const verified = sessionStorage.getItem('emailVerified');
+          if (verified === email) {
+            setAuthInfo({
+              userId: data.userId,
+              userName: data.userName,
+              userEmail: data.userEmail,
+              userAdmin: data.userAdmin === true,
+            });
+          } else {
+            setRequiresVerification(true);
+          }
         } else {
           setUnauthorized(true);
         }
@@ -66,6 +89,20 @@ export default function App() {
           </button>
         </div>
       </div>
+    );
+  }
+
+  if (requiresVerification) {
+    const email = (user.userDetails || '').toLowerCase();
+    return (
+      <EmailVerification
+        userEmail={email}
+        onVerified={async () => {
+          sessionStorage.setItem('emailVerified', email);
+          setRequiresVerification(false);
+          await fetchAuthInfo();
+        }}
+      />
     );
   }
 
