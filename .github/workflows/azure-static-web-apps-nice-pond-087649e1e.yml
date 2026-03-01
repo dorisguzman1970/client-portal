@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "18"
 
       - name: Install frontend dependencies
         run: npm install
@@ -41,7 +41,7 @@ jobs:
 
           app_location: "/"
           api_location: "api"
-          #api_language: "node"
+          api_language: "node"
           output_location: "dist"
           skip_app_build: true
 
@@ -56,4 +56,5 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_POND_087649E1E }}
           action: "close"
+
 
