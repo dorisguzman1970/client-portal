@@ -42,6 +42,7 @@ jobs:
           app_location: "/"
           api_location: "api"
           api_language: "node"
+          api_runtime_version: "~18"
           output_location: "dist"
           skip_app_build: true
 
