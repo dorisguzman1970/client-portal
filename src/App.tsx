@@ -8,6 +8,9 @@ export default function App() {
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const [unauthorized, setUnauthorized] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [signedOut] = useState(() =>
+    new URLSearchParams(window.location.search).get('signedout') === '1'
+  );
   useEffect(() => {
     async function init() {
       try {
@@ -40,6 +43,26 @@ export default function App() {
   if (loading) return <div className="center-screen"><p>Loading...</p></div>;
 
   if (!user) {
+    if (signedOut) {
+      return (
+        <div className="center-screen">
+          <div className="login-card">
+            <h2>Sesión cerrada</h2>
+            <p>Tu sesión ha sido cerrada correctamente.</p>
+            <button className="btn btn-primary" style={{ width: '100%' }} onClick={login}>
+              Iniciar sesión
+            </button>
+            <button
+              className="btn btn-secondary"
+              style={{ width: '100%', marginTop: 10 }}
+              onClick={() => { window.location.href = 'https://github.com/logout'; }}
+            >
+              Cambiar de cuenta GitHub
+            </button>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="center-screen">
         <div className="login-card">
