@@ -52,13 +52,20 @@ export default function App() {
             <button className="btn btn-primary" style={{ width: '100%' }} onClick={login}>
               Iniciar sesión
             </button>
+            <hr style={{ margin: '16px 0', border: 'none', borderTop: '1px solid #ddd' }} />
+            <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
+              ¿Quieres entrar con otra cuenta de GitHub?
+            </p>
             <button
               className="btn btn-secondary"
-              style={{ width: '100%', marginTop: 10 }}
-              onClick={() => { window.location.href = 'https://github.com/logout'; }}
+              style={{ width: '100%' }}
+              onClick={() => { window.open('https://github.com/logout', '_blank'); }}
             >
-              Cambiar de cuenta GitHub
+              Cerrar sesión en GitHub
             </button>
+            <p style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
+              Se abrirá una pestaña nueva. Confirma el logout en GitHub, ciérrala y luego haz clic en "Iniciar sesión".
+            </p>
           </div>
         </div>
       );
