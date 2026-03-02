@@ -19,16 +19,7 @@ const DEFAULT_ADMIN = {
 
 module.exports = async function (context, req) {
   if (!client) {
-    const connStr = process.env.COSMOS_CONNECTION_STRING;
-    context.res = {
-      status: 500,
-      body: {
-        message: 'Cosmos client not initialized.',
-        connStrSet: !!connStr,
-        connStrLength: connStr ? connStr.length : 0,
-        envKeys: Object.keys(process.env).filter(k => k.includes('COSMOS')),
-      },
-    };
+    context.res = { status: 500, body: { message: 'COSMOS_CONNECTION_STRING is not configured.' } };
     return;
   }
 
