@@ -1,4 +1,9 @@
-const { CosmosClient } = require('@azure/cosmos');
+let CosmosClient;
+try {
+  CosmosClient = require('@azure/cosmos').CosmosClient;
+} catch (e) {
+  console.error('Failed to load @azure/cosmos:', e.message);
+}
 
 const connectionString = process.env.COSMOS_CONNECTION_STRING;
 
@@ -6,8 +11,16 @@ if (!connectionString) {
   console.warn('COSMOS_CONNECTION_STRING is not set. Database operations will fail.');
 }
 
-const client = connectionString ? new CosmosClient(connectionString) : null;
-const database = client ? client.database('Portal') : null;
+let client = null;
+let database = null;
+if (CosmosClient && connectionString) {
+  try {
+    client = new CosmosClient(connectionString);
+    database = client.database('Portal');
+  } catch (err) {
+    console.error('CosmosClient init error:', err.message);
+  }
+}
 
 async function getContainer(name) {
   if (!database) throw new Error('Cosmos DB not configured. Set COSMOS_CONNECTION_STRING.');
