@@ -56,13 +56,15 @@ export default function App() {
             <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
               ¿Quieres entrar con otra cuenta de GitHub?
             </p>
-            <button
+            <a
+              href="https://github.com/logout"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn btn-secondary"
-              style={{ width: '100%' }}
-              onClick={() => { window.open('https://github.com/logout', '_blank'); }}
+              style={{ width: '100%', display: 'block', textAlign: 'center', textDecoration: 'none' }}
             >
               Cerrar sesión en GitHub
-            </button>
+            </a>
             <p style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
               Se abrirá una pestaña nueva. Confirma el logout en GitHub, ciérrala y luego haz clic en "Iniciar sesión".
             </p>
