@@ -15,7 +15,7 @@ export async function getAuthUser(): Promise<AuthUser | null> {
 }
 
 export function login() {
-  window.location.href = "/.auth/login/aad";
+  window.location.href = "/.auth/login/github";
 }
 
 export function logout() {

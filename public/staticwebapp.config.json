@@ -6,7 +6,7 @@
     },
     {
       "route": "/login",
-      "rewrite": "/.auth/login/aad"
+      "rewrite": "/.auth/login/github"
     },
     {
       "route": "/logout",
@@ -19,7 +19,7 @@
   ],
   "responseOverrides": {
     "401": {
-      "redirect": "/.auth/login/aad"
+      "redirect": "/.auth/login/github"
     }
   },
   "navigationFallback": {

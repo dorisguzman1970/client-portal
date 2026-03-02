@@ -13,7 +13,7 @@ const DEFAULT_ADMIN = {
   id: 'user-default-admin',
   userId: 1,
   userName: 'su',
-  userEmail: 'soralgroup@outlook.com',
+  userEmail: 'dorisguzman1970',
   userAdmin: true,
 };
 

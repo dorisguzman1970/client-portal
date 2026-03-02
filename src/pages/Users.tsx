@@ -83,7 +83,7 @@ export default function Users({ authInfo, onUserCreatedNonAdmin }: UsersProps) {
   const columns: Column<User>[] = [
     { key: 'userId', label: 'ID' },
     { key: 'userName', label: 'Name' },
-    { key: 'userEmail', label: 'Email' },
+    { key: 'userEmail', label: 'GitHub Username' },
     { key: 'userAdmin', label: 'Admin', render: (u) => u.userAdmin ? 'Yes' : 'No' },
   ];
 
@@ -112,8 +112,8 @@ export default function Users({ authInfo, onUserCreatedNonAdmin }: UsersProps) {
             <input value={form.userName} onChange={(e) => setForm({ ...form, userName: e.target.value })} />
           </div>
           <div className="form-group">
-            <label>Email *</label>
-            <input type="email" value={form.userEmail} onChange={(e) => setForm({ ...form, userEmail: e.target.value })} />
+            <label>GitHub Username *</label>
+            <input type="text" value={form.userEmail} onChange={(e) => setForm({ ...form, userEmail: e.target.value })} />
           </div>
           <div className="form-group form-check">
             <input
