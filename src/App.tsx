@@ -3,6 +3,49 @@ import Portal from './pages/Portal';
 import { getAuthUser, login, logout, type AuthUser } from './auth/auth';
 import type { AuthInfo } from './types';
 
+function SignedOutScreen() {
+  const [githubLogoutDone, setGithubLogoutDone] = useState(false);
+
+  function handleGithubLogout() {
+    window.open('https://github.com/logout', '_blank', 'noopener,noreferrer');
+    setGithubLogoutDone(true);
+  }
+
+  if (githubLogoutDone) {
+    return (
+      <div className="center-screen">
+        <div className="login-card">
+          <h2>Ya puedes cambiar de cuenta</h2>
+          <p>Confirma el logout en la pestaña de GitHub y ciérrala.</p>
+          <p>Luego haz clic aquí para entrar con otra cuenta:</p>
+          <button className="btn btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={login}>
+            Iniciar sesión con otra cuenta
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="center-screen">
+      <div className="login-card">
+        <h2>Sesión cerrada</h2>
+        <p>Tu sesión ha sido cerrada correctamente.</p>
+        <button className="btn btn-primary" style={{ width: '100%' }} onClick={login}>
+          Iniciar sesión
+        </button>
+        <hr style={{ margin: '16px 0', border: 'none', borderTop: '1px solid #ddd' }} />
+        <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
+          ¿Quieres entrar con otra cuenta de GitHub?
+        </p>
+        <button className="btn btn-secondary" style={{ width: '100%' }} onClick={handleGithubLogout}>
+          Cambiar de cuenta
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
@@ -44,33 +87,7 @@ export default function App() {
 
   if (!user) {
     if (signedOut) {
-      return (
-        <div className="center-screen">
-          <div className="login-card">
-            <h2>Sesión cerrada</h2>
-            <p>Tu sesión ha sido cerrada correctamente.</p>
-            <button className="btn btn-primary" style={{ width: '100%' }} onClick={login}>
-              Iniciar sesión
-            </button>
-            <hr style={{ margin: '16px 0', border: 'none', borderTop: '1px solid #ddd' }} />
-            <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
-              ¿Quieres entrar con otra cuenta de GitHub?
-            </p>
-            <a
-              href="https://github.com/logout"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary"
-              style={{ width: '100%', display: 'block', textAlign: 'center', textDecoration: 'none' }}
-            >
-              Cerrar sesión en GitHub
-            </a>
-            <p style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
-              Se abrirá una pestaña nueva. Confirma el logout en GitHub, ciérrala y luego haz clic en "Iniciar sesión".
-            </p>
-          </div>
-        </div>
-      );
+      return <SignedOutScreen />;
     }
     return (
       <div className="center-screen">
