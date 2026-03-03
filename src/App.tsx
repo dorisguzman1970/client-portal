@@ -4,26 +4,9 @@ import { getAuthUser, login, logout, type AuthUser } from './auth/auth';
 import type { AuthInfo } from './types';
 
 function SignedOutScreen() {
-  const [githubLogoutDone, setGithubLogoutDone] = useState(false);
-
-  function handleGithubLogout() {
-    window.open('https://github.com/logout', '_blank', 'noopener,noreferrer');
-    setGithubLogoutDone(true);
-  }
-
-  if (githubLogoutDone) {
-    return (
-      <div className="center-screen">
-        <div className="login-card">
-          <h2>Ya puedes cambiar de cuenta</h2>
-          <p>Confirma el logout en la pestaña de GitHub y ciérrala.</p>
-          <p>Luego haz clic aquí para entrar con otra cuenta:</p>
-          <button className="btn btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={login}>
-            Iniciar sesión con otra cuenta
-          </button>
-        </div>
-      </div>
-    );
+  function handleSwitchAccount() {
+    localStorage.setItem('pendingLogin', '1');
+    window.location.href = 'https://github.com/logout';
   }
 
   return (
@@ -38,9 +21,12 @@ function SignedOutScreen() {
         <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
           ¿Quieres entrar con otra cuenta de GitHub?
         </p>
-        <button className="btn btn-secondary" style={{ width: '100%' }} onClick={handleGithubLogout}>
+        <button className="btn btn-secondary" style={{ width: '100%' }} onClick={handleSwitchAccount}>
           Cambiar de cuenta
         </button>
+        <p style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
+          Irás a GitHub para cerrar sesión. Al regresar al portal, el login se iniciará automáticamente.
+        </p>
       </div>
     </div>
   );
@@ -55,6 +41,11 @@ export default function App() {
     new URLSearchParams(window.location.search).get('signedout') === '1'
   );
   useEffect(() => {
+    if (localStorage.getItem('pendingLogin')) {
+      localStorage.removeItem('pendingLogin');
+      login();
+      return;
+    }
     async function init() {
       try {
         const u = await getAuthUser();
